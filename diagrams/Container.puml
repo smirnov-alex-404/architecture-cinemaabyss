@@ -1,0 +1,38 @@
+@startuml
+title   Диаграмма контейнеров системы «Кинобездна»
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+
+Person(User, "User", "Пользователь системы «Кинобездна»")
+System(CinemaSystem, "Cinema System")
+
+Container_Boundary(CinemaSystem, ""){
+    Container(APIGateway, "API Gateway", "Python")
+
+    Container(MoviesService, "Movies Service", "Go")
+    Container(UserService, "User Service", "Go")
+    Container(PaymentsService, "Payments Service", "Go")
+    Container(EventsService, "Events Service", "Kafka + Python")
+
+    Container(UserDatabase, "Реляционная БД", "PostgreSQL", "Хранит данные")
+    Container(MoviesDatabase, "Реляционная БД", "PostgreSQL", "Хранит данные")
+    Container(PaymentsDatabase, "Реляционная БД", "PostgreSQL", "Хранит данные")
+}
+
+
+Rel(User, APIGateway, "")
+Rel(APIGateway, UserService, "proxy")
+Rel(APIGateway, MoviesService, "proxy")
+Rel(APIGateway, PaymentsService, "proxy")
+
+Rel(UserService, UserDatabase, "Read/Write")
+Rel(MoviesService, MoviesDatabase, "Read/Write")
+Rel(PaymentsService, PaymentsDatabase, "Read/Write")
+
+BiRel(MoviesService, EventsService, "Send/Read events")
+BiRel(UserService, EventsService, "Send/Read events")
+BiRel(PaymentsService, EventsService, "Send/Read events")
+
+
+@enduml

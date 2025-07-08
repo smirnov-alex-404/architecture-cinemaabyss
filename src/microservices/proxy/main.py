@@ -36,7 +36,7 @@ async def route_movies_requests(request: Request, call_next):
             target_url = f'{MOVIES_SERVICE_URL}{path}'
 
     if path.startswith('/api/events'):
-        target_url = f'{MOVIES_SERVICE_URL}{path}'
+        target_url = f'{EVENTS_SERVICE_URL}{path}'
 
     headers = {
         key: value

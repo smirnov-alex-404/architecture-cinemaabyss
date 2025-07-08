@@ -30,12 +30,13 @@ async def health():
 @router.post('/movie')
 async def create_movie_event(data: dict):
     try:
+        print(f'New movie event: {data}')
         msg = {
             'type': 'movie_event',
             'data': data,
         }
         await producer.send(MOVIE_EVENTS_TOPIC, msg)
-        print(await consumer.consume(MOVIE_EVENTS_TOPIC))
+        _ = await consumer.consume(MOVIE_EVENTS_TOPIC)
         return JSONResponse(
             status_code=status.HTTP_201_CREATED,
             content={
@@ -49,12 +50,13 @@ async def create_movie_event(data: dict):
 @router.post('/user')
 async def create_user_event(data: dict):
     try:
+        print(f'New user event: {data}')
         msg = {
             'type': 'user_event',
             'data': data,
         }
         await producer.send(USER_EVENTS_TOPIC, msg)
-        print(await consumer.consume(USER_EVENTS_TOPIC))
+        _ = await consumer.consume(USER_EVENTS_TOPIC)
         return JSONResponse(
             status_code=status.HTTP_201_CREATED,
             content={
@@ -68,12 +70,13 @@ async def create_user_event(data: dict):
 @router.post('/payment')
 async def create_payment_event(data: dict):
     try:
+        print(f'New payment event: {data}')
         msg = {
             'type': 'payment_event',
             'data': data,
         }
         await producer.send(PAYMENT_EVENTS_TOPIC, msg)
-        print(await consumer.consume(PAYMENT_EVENTS_TOPIC))
+        _ = await consumer.consume(PAYMENT_EVENTS_TOPIC)
         return JSONResponse(
             status_code=status.HTTP_201_CREATED,
             content=

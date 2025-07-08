@@ -10,6 +10,7 @@ from fastapi.responses import StreamingResponse
 SERVER_PORT = int(os.getenv('PORT', '8000'))
 MONOLITH_URL = os.getenv('MONOLITH_URL', 'http://monolith:8080').rstrip('/')
 MOVIES_SERVICE_URL = os.getenv('MOVIES_SERVICE_URL', 'http://movies-service:8081').rstrip('/')
+EVENTS_SERVICE_URL = os.getenv('EVENTS_SERVICE_URL', 'http://events-service:8082').rstrip('/')
 MOVIES_MIGRATION_PERCENT = int(os.getenv('MOVIES_MIGRATION_PERCENT', '50'))
 GRADUAL_MIGRATION = os.getenv('GRADUAL_MIGRATION', 'false').lower() == 'true'
 
@@ -33,6 +34,9 @@ async def route_movies_requests(request: Request, call_next):
     if is_movies_request and GRADUAL_MIGRATION:
         if randint(1, 100) <= MOVIES_MIGRATION_PERCENT:
             target_url = f'{MOVIES_SERVICE_URL}{path}'
+
+    if path.startswith('/api/events'):
+        target_url = f'{MOVIES_SERVICE_URL}{path}'
 
     headers = {
         key: value

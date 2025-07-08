@@ -1,4 +1,5 @@
 import os
+import logging
 from random import randint
 
 import httpx
@@ -12,6 +13,7 @@ MOVIES_SERVICE_URL = os.getenv('MOVIES_SERVICE_URL', 'http://movies-service:8081
 MOVIES_MIGRATION_PERCENT = int(os.getenv('MOVIES_MIGRATION_PERCENT', '50'))
 GRADUAL_MIGRATION = os.getenv('GRADUAL_MIGRATION', 'false').lower() == 'true'
 
+logger = logging.getLogger(__name__)
 
 client = httpx.AsyncClient()
 app = FastAPI()
@@ -20,7 +22,7 @@ app = FastAPI()
 async def route_movies_requests(request: Request, call_next):
     path = request.url.path
     method = request.method
-
+    logger.info(f'Got method [{method}] path [{path}]')
     is_movies_request = path.startswith('/api/movies')
 
     target_url = f'{MONOLITH_URL}{path}'
@@ -33,7 +35,7 @@ async def route_movies_requests(request: Request, call_next):
         for key, value in request.headers.items()
         if key.lower() not in ['host', 'content-length']
     }
-
+    logger.info(f'Redirect url [{target_url}]')
     client_request = client.build_request(
         method,
         target_url,

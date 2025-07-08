@@ -35,7 +35,7 @@ async def create_movie_event(data: dict):
             'data': data,
         }
         await producer.send(MOVIE_EVENTS_TOPIC, msg)
-        _ = await consumer.consume(MOVIE_EVENTS_TOPIC)
+        print(await consumer.consume(MOVIE_EVENTS_TOPIC))
         return JSONResponse(
             status_code=status.HTTP_201_CREATED,
             content={
@@ -54,7 +54,7 @@ async def create_user_event(data: dict):
             'data': data,
         }
         await producer.send(USER_EVENTS_TOPIC, msg)
-        _ = await consumer.consume(USER_EVENTS_TOPIC)
+        print(await consumer.consume(USER_EVENTS_TOPIC))
         return JSONResponse(
             status_code=status.HTTP_201_CREATED,
             content={
@@ -73,7 +73,7 @@ async def create_payment_event(data: dict):
             'data': data,
         }
         await producer.send(PAYMENT_EVENTS_TOPIC, msg)
-        _ = await consumer.consume(PAYMENT_EVENTS_TOPIC)
+        print(await consumer.consume(PAYMENT_EVENTS_TOPIC))
         return JSONResponse(
             status_code=status.HTTP_201_CREATED,
             content=

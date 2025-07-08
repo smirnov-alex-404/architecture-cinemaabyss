@@ -6,6 +6,7 @@ TO-BE архитектура КиноБездны.
 Система разделена на отдельные домены и организована единая точка вызова сервисов.
 
 [Container diagram](./diagrams/Container.puml)
+![Container diagram_img](./diagrams/Container.png)
 
 # Задание 2
 

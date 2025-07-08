@@ -22,7 +22,11 @@ app = FastAPI()
 async def route_movies_requests(request: Request, call_next):
     path = request.url.path
     method = request.method
+    if path == '/health':
+        return await call_next(request)
+
     logger.info(f'Got method [{method}] path [{path}]')
+    print(f'Got method [{method}] path [{path}]')
     is_movies_request = path.startswith('/api/movies')
 
     target_url = f'{MONOLITH_URL}{path}'
@@ -36,6 +40,7 @@ async def route_movies_requests(request: Request, call_next):
         if key.lower() not in ['host', 'content-length']
     }
     logger.info(f'Redirect url [{target_url}]')
+    print(f'Redirect url [{target_url}]')
     client_request = client.build_request(
         method,
         target_url,

@@ -1,0 +1,67 @@
+@startuml
+title   Диаграмма контейнеров системы «Кинобездна»
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+
+Person(User, "User", "User of the «Кинобездна» system")
+System(CinemaSystem, "Cinema System")
+
+Container_Boundary(CinemaSystem, ""){
+    Container(Website, "Website", "Vue")
+    Container(MobileApp, "Mobile App", "Java")
+
+    Container(APIGateway, "API Gateway", "Python")
+
+    Container(WebAppBFF, "BFF for Web App", "Python")
+    Container(MobileAppBFF, "BFF for Mobile App", "Python")
+
+    Container(MoviesService, "Movies Service", "Go")
+    Container(UserService, "User Service", "Go")
+    Container(PaymentsService, "Payments Service", "Go")
+    Container(EventsService, "Events Service", "Kafka + Python")
+    Container(AuthService, "Auth Service", "")
+
+    Container(UserDatabase, "DB", "PostgreSQL", "Stores data")
+
+    Container(PaymentsDatabase, "DB", "PostgreSQL", "Stores data")
+    Container(AuthDatabase, "DB", "", "Stores data")
+}
+
+System_Ext(MoviesDatabase, "Amazon S3", "Stores movies")
+System_Ext(RecommendationService, "Recommendation Service", "")
+System_Ext(PaymentsExtService, "Third-party payment processing service", "")
+
+
+Rel(User, Website, "")
+Rel(User, MobileApp, "")
+
+Rel(Website, APIGateway, "")
+Rel(MobileApp, APIGateway, "")
+Rel(APIGateway, WebAppBFF, "proxy")
+Rel(APIGateway, MobileAppBFF, "proxy")
+
+Rel(WebAppBFF, AuthService, "")
+Rel(WebAppBFF, UserService, "")
+Rel(WebAppBFF, MoviesService, "")
+Rel(WebAppBFF, PaymentsService, "")
+
+Rel(MobileAppBFF, AuthService, "")
+Rel(MobileAppBFF, UserService, "")
+Rel(MobileAppBFF, MoviesService, "")
+Rel(MobileAppBFF, PaymentsService, "")
+
+
+Rel(UserService, UserDatabase, "Read/Write")
+Rel(MoviesService, MoviesDatabase, "Read/Write")
+Rel(PaymentsService, PaymentsDatabase, "Read/Write")
+Rel(AuthService, AuthDatabase, "Read/Write")
+
+Rel(MoviesService, RecommendationService, "Gets recommendations")
+Rel(PaymentsService, PaymentsExtService, "Process payments")
+
+BiRel(MoviesService, EventsService, "Send/Read events")
+BiRel(UserService, EventsService, "Send/Read events")
+BiRel(PaymentsService, EventsService, "Send/Read events")
+
+@enduml
